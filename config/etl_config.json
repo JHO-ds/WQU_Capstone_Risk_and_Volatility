@@ -1,0 +1,20 @@
+{
+  "data_loading": {
+    "VIX_Ticker_Name": "^VIX",
+    "EQ_Ticker_Name": "VOO",
+    "start_date": "2018-04-01",
+    "end_date": "2023-04-01",
+    "download_interval": "1d",
+    "col_name": "Adj Close",
+    "stess_start_date": "2008-01-01",
+    "stress_end_date": "2009-01-01"
+  },
+  "data_processing": {
+    "window_period": 14,
+    "target_benchmark": 0,
+    "lags": 7
+  },
+  "train_test_split": {
+    "train_size": 0.8
+  }
+}

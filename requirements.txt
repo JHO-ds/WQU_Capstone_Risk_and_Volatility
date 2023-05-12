@@ -1,0 +1,16 @@
+# Data Manipulation Libraries
+pandas
+numpy
+
+# Data Visualization
+matplotlib
+
+# External Data Vendor APIs
+yfinance
+
+# Data Modelling & Statistical Test Libraries
+statsmodels
+sklearn
+pmdarima
+lightgbm
+xgboost
