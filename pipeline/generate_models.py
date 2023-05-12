@@ -1,4 +1,5 @@
 import time
+from src.utils.utils import dir_management
 from src.data.market_data_loader import Market_Data_Loader
 from src.models.logistic_regression import Logistic_Regression
 from src.models.random_forest import RandomForest
@@ -8,6 +9,8 @@ from src.models.ensemble_voting import Ensemble_Voting
 from src.models.ensemble_stacking import Ensemble_Stacking
 
 if __name__ == "__main__":
+    # ensure that the output folders are created
+    dir_management()
 
     # start data loading
     start = time.time()
