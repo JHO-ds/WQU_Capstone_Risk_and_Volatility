@@ -5,6 +5,8 @@ from src.models.arima import ARIMA
 from src.models.random_forest import RandomForest
 from src.models.lightgbm_classifier import LightGBM
 from src.models.xgboost_classifier import XGBoost
+from src.models.ensemble_voting import Ensemble_Voting
+from src.models.ensemble_stacking import Ensemble_Stacking
 
 if __name__ == "__main__":
 
@@ -53,6 +55,17 @@ if __name__ == "__main__":
     # 6. Neural Network - LSTM
 
     # 7. Ensembly of Models
+    start = time.time()
+    ensemble_voting_model = Ensemble_Voting()
+    ensemble_voting_model.model_training()
+    ensemble_voting_model.save_model()
+    voting_train_time = time.time() - start
+
+    start = time.time()
+    ensemble_stacking_model = Ensemble_Stacking()
+    ensemble_stacking_model.model_training()
+    ensemble_stacking_model.save_model()
+    stacking_train_time = time.time() - start
 
     print(f"""
     The time taken (s) for the following process are noted below:
@@ -62,6 +75,6 @@ if __name__ == "__main__":
     Random Forest   : {rf_train_time:.2f}
     LightGBM        : {lightgbm_train_time:.2f}
     XGBoost         : {xgboost_train_time:.2f}
+    Voting          : {voting_train_time:.2f}
+    Stacking        : {stacking_train_time:.2f}
     """)
-
-
