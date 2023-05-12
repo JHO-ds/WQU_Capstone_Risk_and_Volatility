@@ -1,7 +1,6 @@
 import time
 from src.data.market_data_loader import Market_Data_Loader
 from src.models.logistic_regression import Logistic_Regression
-from src.models.arima import ARIMA
 from src.models.random_forest import RandomForest
 from src.models.lightgbm_classifier import LightGBM
 from src.models.xgboost_classifier import XGBoost
@@ -24,11 +23,12 @@ if __name__ == "__main__":
     log_train_time = time.time() - start
 
     # 2. ARIMA time-series
-    start = time.time()
-    arima_model = ARIMA()
-    arima_model.model_training()
-    arima_model.save_model()
-    arima_train_time = time.time() - start
+    # ARIMA is excluded to focus on classification algorithms
+    # start = time.time()
+    # arima_model = ARIMA()
+    # arima_model.model_training()
+    # arima_model.save_model()
+    # arima_train_time = time.time() - start
 
     # 3. Random-Forest
     start = time.time()
@@ -71,10 +71,11 @@ if __name__ == "__main__":
     The time taken (s) for the following process are noted below:
     ETL             : {etl_load_time:.2f}
     Logistic        : {log_train_time:.2f}
-    ARIMA           : {arima_train_time:.2f}
     Random Forest   : {rf_train_time:.2f}
     LightGBM        : {lightgbm_train_time:.2f}
     XGBoost         : {xgboost_train_time:.2f}
     Voting          : {voting_train_time:.2f}
     Stacking        : {stacking_train_time:.2f}
     """)
+
+

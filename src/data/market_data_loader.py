@@ -24,6 +24,10 @@ class Market_Data_Loader:
         self.all_tickers = " ".join([self.vix_ticker, self.eq_ticker])
         self.start_date = self.data_loading_config.get("start_date")
         self.end_date = self.data_loading_config.get("end_date")
+        self.eq_ticker_stress = self.data_loading_config.get("EQ_Ticker_Name_Stress", "SPY")
+        self.all_tickers_stress = " ".join([self.vix_ticker, self.eq_ticker_stress])
+        self.stress_start_date = self.data_loading_config.get("stress_start_date")
+        self.stress_end_date = self.data_loading_config.get("stress_end_date")
         self.interval = self.data_loading_config.get("download_interval")
         self.col_name = self.data_loading_config.get("col_name")
 
@@ -39,10 +43,21 @@ class Market_Data_Loader:
                            end=self.end_date,
                            interval=self.interval)[self.col_name].dropna()
 
+    def market_data_download_stress_period(self) -> pd.DataFrame:
+        return yf.download(tickers=self.all_tickers_stress,
+                           start=self.stress_start_date,
+                           end=self.stress_end_date,
+                           interval=self.interval)[self.col_name].dropna()
+
     def market_data_generate_returns(self, market_data: pd.DataFrame) -> pd:
         return np.log(market_data).diff() * 100
 
-    def generate_features(self, market_data: pd.DataFrame) -> pd:
+    def generate_features(self, market_data: pd.DataFrame, backtest : str = "recent") -> pd:
+        if backtest == "recent":
+            eq_tkr = self.eq_ticker
+        else:
+            eq_tkr = self.eq_ticker_stress
+
         # generate RSI
         vix_rsi = market_data.copy(deep=True)
         vix_rsi["Gain"] = vix_rsi[self.vix_ticker].apply(lambda x: x if x > 0 else 0)
@@ -57,7 +72,7 @@ class Market_Data_Loader:
             vix_rsi[f"lag_{i}"] = vix_rsi[self.vix_ticker].shift(i)
 
         # generate binary variable
-        vix_rsi["target"] = vix_rsi[self.eq_ticker].apply(lambda x: int(x > self.benchmark))
+        vix_rsi["target"] = vix_rsi[eq_tkr].apply(lambda x: int(x > self.benchmark))
 
         # clear intermediary columns
         processed_market_data = vix_rsi.copy(deep=True). \
@@ -85,3 +100,8 @@ class Market_Data_Loader:
         train_df, test_df = self.train_test_split(processed_market_data)
         train_df.to_csv(os.path.join(p.market_data_output_folder, "train_set.csv"))
         test_df.to_csv(os.path.join(p.market_data_output_folder, "test_set.csv"))
+
+        market_data_stress = self.market_data_download_stress_period()
+        log_returns_stress = self.market_data_generate_returns(market_data_stress)
+        processed_market_data_stress = self.generate_features(log_returns_stress, backtest="stress")
+        processed_market_data_stress.to_csv(os.path.join(p.market_data_output_folder, "stress_period.csv"))

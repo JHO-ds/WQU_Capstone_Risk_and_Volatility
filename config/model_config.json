@@ -1,4 +1,5 @@
 {
+  "random_state": 100,
   "Logistic_Regression": {
     "target_variable": "target",
     "explanatory_variables": ["RSI", "lag_1", "lag_2", "lag_3", "lag_4", "lag_5", "lag_6", "lag_7"],
@@ -6,7 +7,7 @@
     "name": "Logistic"
   },
   "ARIMA": {
-    "time-series": "VOO",
+    "time-series": "SPY",
     "exogenous": "RSI",
     "prediction_benchmark": 0,
     "name": "ARIMA"
