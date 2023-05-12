@@ -112,27 +112,57 @@ def classification_score(y_pred: np.array, y_true: np.array, roc_auc: float, ver
 
 def compile_model_eval_reports():
     # compile train set evaluation report
-    all_report_names = [elem for elem in os.listdir(p.model_evaluation_report_path) if ".csv" in elem]
-    all_train_reports = [elem for elem in all_report_names if "train" in elem]
-    all_train_df = [pd.read_csv(os.path.join(p.model_evaluation_report_path, elem)) for elem in all_train_reports]
-    all_train_df = [df.set_index("Unnamed: 0") for df in all_train_df]
-    train_reports = pd.concat(all_train_df, axis=1)
-    train_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "train_compiled_report.csv"))
+    try:
+        all_report_names = [elem for elem in os.listdir(p.model_evaluation_report_path) if ".csv" in elem]
+        all_train_reports = [elem for elem in all_report_names if "train" in elem]
+        all_train_df = [pd.read_csv(os.path.join(p.model_evaluation_report_path, elem)) for elem in all_train_reports]
+        all_train_df = [df.set_index("Unnamed: 0") for df in all_train_df]
+        train_reports = pd.concat(all_train_df, axis=1)
+        train_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "train_compiled_report.csv"))
+    except Exception as e:
+        print("Error occurred while compiling train set reports")
 
-    # compile test set evaluation report
-    all_test_reports = [elem for elem in all_report_names if "test" in elem]
-    all_test_df = [pd.read_csv(os.path.join(p.model_evaluation_report_path, elem)) for elem in all_test_reports]
-    all_test_df = [df.set_index("Unnamed: 0") for df in all_test_df]
-    test_reports = pd.concat(all_test_df, axis=1)
-    test_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "test_compiled_report.csv"))
+    try:
+        # compile test set evaluation report
+        all_test_reports = [elem for elem in all_report_names if "test" in elem]
+        all_test_df = [pd.read_csv(os.path.join(p.model_evaluation_report_path, elem)) for elem in all_test_reports]
+        all_test_df = [df.set_index("Unnamed: 0") for df in all_test_df]
+        test_reports = pd.concat(all_test_df, axis=1)
+        test_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "test_compiled_report.csv"))
+    except Exception as e:
+        print("Error occurred while compiling test set reports")
 
-    # compile recent period backtest report
-    all_backtest_names = [elem for elem in os.listdir(p.backtest_recent_path) if ".csv" in elem]
-    all_backtest_df = [pd.read_csv(os.path.join(p.backtest_recent_path, elem)) for elem in all_backtest_names]
-    all_backtest_df = [df.rename(columns={"Unnamed: 0": "Eval_metric"}) for df in all_backtest_df]
-    all_backtest_df = [df.set_index("Eval_metric") for df in all_backtest_df]
-    backtest_reports = pd.concat(all_backtest_df, axis=1)
-    backtest_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "backtest_recent_compiled.csv"))
+    try:
+        # compile stress evaluation report
+        all_stress_reports = [elem for elem in all_report_names if "stress" in elem]
+        all_stress_df = [pd.read_csv(os.path.join(p.model_evaluation_report_path, elem)) for elem in all_stress_reports]
+        all_stress_df = [df.set_index("Unnamed: 0") for df in all_stress_df]
+        stress_reports = pd.concat(all_stress_df, axis=1)
+        stress_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "stress_compiled_report.csv"))
+    except Exception as e:
+        print("Error occurred while compiling stress reports")
+
+    try:
+        # compile recent period recent backtest report
+        all_backtest_names = [elem for elem in os.listdir(p.backtest_recent_path) if ".csv" in elem]
+        all_backtest_df = [pd.read_csv(os.path.join(p.backtest_recent_path, elem)) for elem in all_backtest_names]
+        all_backtest_df = [df.rename(columns={"Unnamed: 0": "Eval_metric"}) for df in all_backtest_df]
+        all_backtest_df = [df.set_index("Eval_metric") for df in all_backtest_df]
+        backtest_reports = pd.concat(all_backtest_df, axis=1)
+        backtest_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "backtest_recent_compiled.csv"))
+    except Exception as e:
+        print("Error occurred while compiling recent backtest reports")
+
+    try:
+        # compile recent period stress backtest report
+        all_backtest_names = [elem for elem in os.listdir(p.backtest_stress_path) if ".csv" in elem]
+        all_backtest_df = [pd.read_csv(os.path.join(p.backtest_stress_path, elem)) for elem in all_backtest_names]
+        all_backtest_df = [df.rename(columns={"Unnamed: 0": "Eval_metric"}) for df in all_backtest_df]
+        all_backtest_df = [df.set_index("Eval_metric") for df in all_backtest_df]
+        backtest_reports = pd.concat(all_backtest_df, axis=1)
+        backtest_reports.to_csv(os.path.join(p.model_evaluation_report_path, "compiled", "backtest_stress_compiled.csv"))
+    except Exception as e:
+        print("Error occurred while compiling stres backtest reports")
 
 
 def Sharpe_Ratio(portfolio_returns: pd.Series, rf: float, n: int) -> float:

@@ -1,7 +1,0 @@
-,ARIMA
-Test_AIC,-inf
-Test_Accuracy,0.468
-Test_BIC,-inf
-Test_F1-Score,0.6336088154269972
-Test_Precision,0.46747967479674796
-Test_Recall,0.9829059829059829

@@ -1,5 +1,4 @@
 from src.models.logistic_regression import Logistic_Regression
-from src.models.arima import ARIMA
 from src.models.random_forest import RandomForest
 from src.models.lightgbm_classifier import LightGBM
 from src.models.xgboost_classifier import XGBoost
@@ -12,9 +11,9 @@ if __name__ == "__main__":
     log_model.model_evaluation()
     log_model.backtest_strategy()
 
-    arima_model = ARIMA()
-    arima_model.model_evaluation()
-    arima_model.backtest_strategy()
+    # arima_model = ARIMA()
+    # arima_model.model_evaluation()
+    # arima_model.backtest_strategy()
 
     rf_model = RandomForest()
     rf_model.model_evaluation()
