@@ -3,6 +3,8 @@ from src.models.arima import ARIMA
 from src.models.random_forest import RandomForest
 from src.models.lightgbm_classifier import LightGBM
 from src.models.xgboost_classifier import XGBoost
+from src.models.ensemble_voting import Ensemble_Voting
+from src.models.ensemble_stacking import Ensemble_Stacking
 from src.model_evaluation.evaluation_metrics import compile_model_eval_reports
 
 if __name__ == "__main__":
@@ -25,5 +27,13 @@ if __name__ == "__main__":
     xgboost_model = XGBoost()
     xgboost_model.model_evaluation()
     xgboost_model.backtest_strategy()
+
+    ensemble_voting_model = Ensemble_Voting()
+    ensemble_voting_model.model_evaluation()
+    ensemble_voting_model.backtest_strategy()
+
+    ensemble_stacking_model = Ensemble_Stacking()
+    ensemble_stacking_model.model_evaluation()
+    ensemble_stacking_model.backtest_strategy()
 
     compile_model_eval_reports()

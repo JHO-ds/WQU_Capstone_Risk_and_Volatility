@@ -19,7 +19,8 @@ class Models:
         self.random_state = 42
 
     def model_evaluation(self):
-        self.model = pickle.load(open(os.path.join(p.model_path, f"{self.model_name}.pkl"), "rb"))
+        model_path = os.path.join(p.model_path, f"{self.model_name}.pkl")
+        self.model = util.load_model(model_path)
         x_train, y_train, x_test, y_test = self.data_preprocessing()
         benchmark = self.curr_config.get("prediction_benchmark")
 
