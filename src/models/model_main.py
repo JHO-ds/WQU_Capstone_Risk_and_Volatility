@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import pickle
+import random
 from sklearn.metrics import roc_auc_score
 
 from config import properties as p
@@ -17,6 +18,8 @@ class Models:
         self.test_set = pd.read_csv(p.test_set_path)
         self.config = util.read_json(p.model_config_path)
         self.random_state = self.config.get("random_state", 42)
+        random.seed(self.random_state)
+        np.random.seed(self.random_state)
 
     def model_evaluation(self, backtest: str = "recent"):
         model_path = os.path.join(p.model_path, f"{self.model_name}.pkl")
