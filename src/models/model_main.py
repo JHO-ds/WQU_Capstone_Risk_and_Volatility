@@ -21,6 +21,9 @@ class Models:
         random.seed(self.random_state)
         np.random.seed(self.random_state)
 
+    def predict_probability(self, input_data: np.array) -> np.array:
+        return self.model.predict_proba(input_data)[:, 1]
+
     def model_evaluation(self, backtest: str = "recent"):
         model_path = os.path.join(p.model_path, f"{self.model_name}.pkl")
         self.model = util.load_model(model_path)
@@ -29,8 +32,7 @@ class Models:
 
         if backtest == "recent":
             # 1. evaluate model performance on train set
-            train_predicted_prob = self.model.predict_proba(x_train)
-            train_predicted_prob = train_predicted_prob[:, 1]
+            train_predicted_prob = self.predict_probability(x_train)
             aic_train = aic_calc(y_train, train_predicted_prob, x_train.shape[1])
             bic_train = bic_calc(y_train, train_predicted_prob, x_train.shape[1])
             roc_auc_train = roc_auc_score(y_train, train_predicted_prob)
@@ -54,8 +56,7 @@ class Models:
             train_report.to_csv(os.path.join(p.model_evaluation_report_path, f"{self.model_name}_train_report.csv"))
 
             # evaluate model performance on test set
-            test_predicted_prob = self.model.predict_proba(x_test)
-            test_predicted_prob = test_predicted_prob[:, 1]
+            test_predicted_prob = self.predict_probability(x_test)
             aic_test = aic_calc(y_test, test_predicted_prob, x_test.shape[1])
             bic_test = bic_calc(y_test, test_predicted_prob, x_test.shape[1])
             roc_auc_test = roc_auc_score(y_test, test_predicted_prob)
@@ -88,8 +89,7 @@ class Models:
             y_column = self.curr_config.get("target_variable")
             y_stress_data = stress_data[y_column]
 
-            stress_predicted_prob = self.model.predict_proba(x_stress_data)
-            stress_predicted_prob = stress_predicted_prob[:, 1]
+            stress_predicted_prob = self.predict_probability(x_stress_data)
 
             # extract the return series
             aic_stress = aic_calc(y_stress_data, stress_predicted_prob, len(x_columns))
@@ -145,7 +145,7 @@ class Models:
 
             # load the model and generate predictions
             self.model = util.load_model(os.path.join(p.model_path, f"{self.model_name}.pkl"))
-            y_pred_prob = self.model.predict_proba(x_stress_data)[:, 1]
+            y_pred_prob = self.predict_probability(x_stress_data)
             benchmark = self.curr_config.get("prediction_benchmark")
             y_pred_class = np.vectorize(util.map_class)(y_pred_prob, benchmark)
 
