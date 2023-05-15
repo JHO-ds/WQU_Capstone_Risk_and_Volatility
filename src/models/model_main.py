@@ -3,6 +3,8 @@ import numpy as np
 import os
 import pickle
 import random
+import shap
+from matplotlib import pyplot as plt
 from sklearn.metrics import roc_auc_score
 
 from config import properties as p
@@ -24,9 +26,16 @@ class Models:
     def predict_probability(self, input_data: np.array) -> np.array:
         return self.model.predict_proba(input_data)[:, 1]
 
-    def model_evaluation(self, backtest: str = "recent"):
+    def load_saved_model(self):
         model_path = os.path.join(p.model_path, f"{self.model_name}.pkl")
         self.model = util.load_model(model_path)
+
+    def load_shap_value(self):
+        shap_path = os.path.join(p.shap_path, f"{self.model_name}_SHAP_Value.pkl")
+        self.shap_values = util.load_model(shap_path)
+
+    def model_evaluation(self, backtest: str = "recent"):
+        self.load_saved_model()
         x_train, y_train, x_test, y_test = self.data_preprocessing()
         benchmark = self.curr_config.get("prediction_benchmark")
 
@@ -42,18 +51,28 @@ class Models:
                                                                                                            y_train,
                                                                                                            roc_auc_train)
 
+            # train_report = pd.DataFrame({
+            #     self.model_name: {
+            #         "Train_Accuracy": acc_train,
+            #         "Train_Precision": precision_train,
+            #         "Train_Recall": recall_train,
+            #         "Train_F1-Score": f1_train,
+            #         "Train_AIC": aic_train,
+            #         "Train_BIC": bic_train,
+            #         "Train_ROC_AUC_Score": roc_auc_train
+            #     }
+            # }).fillna(float(0))
+
             train_report = pd.DataFrame({
                 self.model_name: {
                     "Train_Accuracy": acc_train,
                     "Train_Precision": precision_train,
                     "Train_Recall": recall_train,
                     "Train_F1-Score": f1_train,
-                    "Train_AIC": aic_train,
-                    "Train_BIC": bic_train,
                     "Train_ROC_AUC_Score": roc_auc_train
                 }
             }).fillna(float(0))
-            train_report.to_csv(os.path.join(p.model_evaluation_report_path, f"{self.model_name}_train_report.csv"))
+            train_report.to_csv(os.path.join(p.model_evaluation_report_raw_path, f"{self.model_name}_train_report.csv"))
 
             # evaluate model performance on test set
             test_predicted_prob = self.predict_probability(x_test)
@@ -66,18 +85,28 @@ class Models:
                                                                                                      y_test,
                                                                                                      roc_auc_test)
 
+            # test_report = pd.DataFrame({
+            #     self.model_name: {
+            #         "Test_Accuracy": acc_test,
+            #         "Test_Precision": precision_test,
+            #         "Test_Recall": recall_test,
+            #         "Test_F1-Score": f1_test,
+            #         "Test_AIC": aic_test,
+            #         "Test_BIC": bic_test,
+            #         "Test_ROC_AUC_Score": roc_auc_test
+            #     }
+            # }).fillna(float(0))
+
             test_report = pd.DataFrame({
                 self.model_name: {
                     "Test_Accuracy": acc_test,
                     "Test_Precision": precision_test,
                     "Test_Recall": recall_test,
                     "Test_F1-Score": f1_test,
-                    "Test_AIC": aic_test,
-                    "Test_BIC": bic_test,
                     "Test_ROC_AUC_Score": roc_auc_test
                 }
             }).fillna(float(0))
-            test_report.to_csv(os.path.join(p.model_evaluation_report_path, f"{self.model_name}_test_report.csv"))
+            test_report.to_csv(os.path.join(p.model_evaluation_report_raw_path, f"{self.model_name}_test_report.csv"))
 
         elif backtest == "stress":
             stress_data_path = os.path.join(p.market_data_output_folder, "stress_period.csv")
@@ -102,18 +131,28 @@ class Models:
                 y_stress_data,
                 roc_auc_stress)
 
+            # stress_report = pd.DataFrame({
+            #     self.model_name: {
+            #         "Train_Accuracy": acc_stress,
+            #         "Train_Precision": precision_stress,
+            #         "Train_Recall": recall_stress,
+            #         "Train_F1-Score": f1_stress,
+            #         "Train_AIC": aic_stress,
+            #         "Train_BIC": bic_stress,
+            #         "Train_ROC_AUC_Score": roc_auc_stress
+            #     }
+            # }).fillna(float(0))
+
             stress_report = pd.DataFrame({
                 self.model_name: {
-                    "Train_Accuracy": acc_stress,
-                    "Train_Precision": precision_stress,
-                    "Train_Recall": recall_stress,
-                    "Train_F1-Score": f1_stress,
-                    "Train_AIC": aic_stress,
-                    "Train_BIC": bic_stress,
-                    "Train_ROC_AUC_Score": roc_auc_stress
+                    "Accuracy": acc_stress,
+                    "Precision": precision_stress,
+                    "Recall": recall_stress,
+                    "F1-Score": f1_stress,
+                    "ROC_AUC_Score": roc_auc_stress
                 }
             }).fillna(float(0))
-            stress_report.to_csv(os.path.join(p.model_evaluation_report_path, f"{self.model_name}_stress_report.csv"))
+            stress_report.to_csv(os.path.join(p.model_evaluation_report_raw_path, f"{self.model_name}_stress_report.csv"))
 
         else:
             # logging statement for input error
@@ -165,6 +204,21 @@ class Models:
             # include log for error message
             pass
 
+    def generate_causal_inference(self):
+        pass
+
+    def generate_shap_value(self):
+        x_train, y_train, x_test, y_test = self.data_preprocessing()
+        self.load_saved_model()
+        explainer = shap.Explainer(self.model.predict, x_train)
+        self.shap_values = explainer(x_train)
+        self.shap_values.feature_names = self.curr_config.get("explanatory_variables")
+        self.save_shap_value()
+
     def save_model(self):
         with open(os.path.join(p.model_path, f'{self.model_name}.pkl'), 'wb') as file:
             pickle.dump(self.model, file)
+
+    def save_shap_value(self):
+        with open(os.path.join(p.shap_path, f'{self.model_name}_SHAP_Value.pkl'), 'wb') as file:
+            pickle.dump(self.shap_values, file)

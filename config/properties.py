@@ -16,5 +16,8 @@ model_path = os.path.join(output_folder, "models")
 
 # For Model Evaluation
 model_evaluation_report_path = os.path.join(output_folder, "model_evaluation")
+model_evaluation_report_raw_path = os.path.join(model_evaluation_report_path, "raw")
+model_evaluation_report_compiled_path = os.path.join(model_evaluation_report_path, "compiled")
 backtest_recent_path = os.path.join(model_evaluation_report_path, "backtest", "recent")
 backtest_stress_path = os.path.join(model_evaluation_report_path, "backtest", "stress")
+shap_path = os.path.join(model_evaluation_report_path, "shap")
