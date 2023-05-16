@@ -14,3 +14,5 @@ sklearn
 pmdarima
 lightgbm
 xgboost
+keras
+tensorflow

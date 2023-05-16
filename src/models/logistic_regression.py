@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from sklearn import linear_model
+# from statsmodels.api import Logit
 import os
 
 from config import properties as p
 from src.models.model_main import Models
-from src.model_evaluation.evaluation_metrics import classification_score
 
 
 class Logistic_Regression(Models):
@@ -33,6 +33,8 @@ class Logistic_Regression(Models):
         # train the model
         self.model = linear_model.LogisticRegression()
         self.model.fit(x_train, y_train)
+        # self.model = Logit(exog=x_train, endog=y_train)
+        # self.model.fit()
 
         # predict the probabilities
         y_pred = self.model.predict_proba(x_test)

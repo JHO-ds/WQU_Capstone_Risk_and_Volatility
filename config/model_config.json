@@ -34,9 +34,17 @@
     "name": "XGBoost"
   },
   "ANN": {
+    "target_variable": "target",
+    "explanatory_variables": ["RSI", "lag_1", "lag_2", "lag_3", "lag_4", "lag_5", "lag_6", "lag_7"],
+    "prediction_benchmark": 0.6,
+    "evaluation_metric": "roc_auc",
     "name": "ANN"
   },
   "LSTM": {
+    "target_variable": "target",
+    "explanatory_variables": ["RSI", "lag_1", "lag_2", "lag_3", "lag_4", "lag_5", "lag_6", "lag_7"],
+    "prediction_benchmark": 0.6,
+    "evaluation_metric": "roc_auc",
     "name": "LSTM"
   },
   "Ensemble_Voting": {

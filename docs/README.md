@@ -26,7 +26,11 @@ Authored by: Jeff Ho & Teo Chee Seong
 2. Model Evaluation
    1. The script is located in ~/pipline/generate_model_evaluation.py
    2. The Model config file is located in ~/config/model_config.json
-3. File Paths
+   3. The stress period evaluation is located in ~/pipline/backtest_stress_period.py
+3. Model Interpretation
+   1. This project uses SHAP value to explain our machine learning models - please check the documentation here (https://shap.readthedocs.io/en/latest/)
+   2. The script is located in ~/pipline/generate_causal_inference.py
+4. File Paths
    1. The paths for the various output and config files are located in ~/config/properties.py
 
 **Outputs**

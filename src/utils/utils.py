@@ -28,5 +28,8 @@ def dir_management():
     make_dir(p.market_data_output_folder)
     make_dir(p.model_prediction_path)
     make_dir(p.model_evaluation_report_path)
+    make_dir(p.model_evaluation_report_raw_path)
+    make_dir(p.model_evaluation_report_compiled_path)
     make_dir(p.backtest_recent_path)
     make_dir(p.backtest_stress_path)
+    make_dir(p.shap_path)
