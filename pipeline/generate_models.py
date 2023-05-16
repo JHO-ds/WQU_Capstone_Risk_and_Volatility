@@ -5,6 +5,8 @@ from src.models.logistic_regression import Logistic_Regression
 from src.models.random_forest import RandomForest
 from src.models.lightgbm_classifier import LightGBM
 from src.models.xgboost_classifier import XGBoost
+from src.models.ANN import ANN
+from src.models.LSTM import LongShortTM
 from src.models.ensemble_voting import Ensemble_Voting
 from src.models.ensemble_stacking import Ensemble_Stacking
 
@@ -54,8 +56,18 @@ if __name__ == "__main__":
     xgboost_train_time = time.time() - start
 
     # 5. Neural Network - ANN
+    start = time.time()
+    ann_model = ANN()
+    ann_model.model_training()
+    ann_model.save_model()
+    ann_train_time = time.time() - start
 
     # 6. Neural Network - LSTM
+    start = time.time()
+    lstm_model = LongShortTM()
+    lstm_model.model_training()
+    lstm_model.save_model()
+    lstm_train_time = time.time() - start
 
     # 7. Ensembly of Models
     start = time.time()
@@ -77,8 +89,8 @@ if __name__ == "__main__":
     Random Forest   : {rf_train_time:.2f}
     LightGBM        : {lightgbm_train_time:.2f}
     XGBoost         : {xgboost_train_time:.2f}
+    ANN             : {ann_train_time:.2f}
+    LSTM            : {lstm_train_time:.2f}
     Voting          : {voting_train_time:.2f}
     Stacking        : {stacking_train_time:.2f}
     """)
-
-

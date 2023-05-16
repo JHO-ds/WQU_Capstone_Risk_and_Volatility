@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # 1. Logistic Regression
     start = time.time()
     log_model = Logistic_Regression()
-    # log_model.generate_shap_value()
+    log_model.generate_shap_value()
     log_train_time = time.time() - start
 
     # 3. Random-Forest
