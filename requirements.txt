@@ -16,3 +16,7 @@ lightgbm
 xgboost
 keras
 tensorflow
+
+# for shap 
+numba
+shap
