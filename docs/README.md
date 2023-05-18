@@ -30,6 +30,8 @@ Authored by: Jeff Ho & Teo Chee Seong
 3. Model Interpretation
    1. This project uses SHAP value to explain our machine learning models - please check the documentation here (https://shap.readthedocs.io/en/latest/)
    2. The script is located in ~/pipline/generate_causal_inference.py
+   3. If there is any installation error for SHAP, run the following command:
+      1. python pip install numba --upgrade
 4. File Paths
    1. The paths for the various output and config files are located in ~/config/properties.py
 
